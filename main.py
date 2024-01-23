@@ -10,7 +10,7 @@ load_dotenv(find_dotenv())
 
 ALLOWED_UPDATES = ['message, edited_message']
 
-bot = Bot(token=os.getenv('TOKEN'))
+bot = Bot(token=os.getenv('BOT_TOKEN'))
 dp = Dispatcher(storage=MemoryStorage())
 storage = MemoryStorage()
 
