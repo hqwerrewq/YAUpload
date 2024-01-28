@@ -4,4 +4,4 @@ import yadisk
 
 load_dotenv(find_dotenv())
 
-client = yadisk.AsyncClient(token=os.getenv('BOT_TOKEN'))
+client = yadisk.AsyncClient(token=os.getenv('DISK_TOKEN'))

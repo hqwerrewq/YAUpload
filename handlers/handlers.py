@@ -1,22 +1,38 @@
-from aiogram import types, F, Router, Dispatcher
-from aiogram.types import Message
-from aiogram.filters import Command
-from disk.connect import client
+import json
+
+from aiogram import types, Router, F
+from aiogram.filters import CommandStart
+from aiogram.fsm.context import FSMContext
+
+from keyboards.keyboard import folders_menu
+from utils.states import CreateFolderStates
 
 router = Router()
-dp = Dispatcher()
 
 
-@router.message(Command('start'))
-async def start_handler(msg: Message):
-    await msg.answer('Привет, отправь файл что бы сохранить его.')
+@router.message(CommandStart())
+async def start(message: types.Message):
+    await message.answer('Hello, I\'m Telegram')
 
 
-@router.message()
-async def message_handler(msg: Message):
-    file_id = msg.document.file_id
-    file = await msg.bot.get_file(file_id)
-    file_path = file.file_path
-    src = '/test/' + msg.document.file_name
+@router.message(F.photo)
+async def photo(message: types.Message):
+    await message.answer('Выберите куда сохранить.', reply_markup=folders_menu())
 
-    await client.upload(await msg.bot.download_file(file_path), src)
+
+@router.callback_query(F.data == 'create_folder')
+async def folder_name(call: types.CallbackQuery, state: FSMContext):
+    await call.message.answer('Назвиние папки: ')
+    await state.set_state(CreateFolderStates.folder_name)
+
+
+@router.message(CreateFolderStates.folder_name)
+async def create_folder(message: types.Message, state: FSMContext):
+    await state.update_data(name=message.text)
+    data = await state.get_data()
+    await state.clear()
+    add_to_json = json.load(open('C:/telegram-bot/data/db.json'))
+    add_to_json['folders'].append(data['name'])
+    with open('C:/telegram-bot/data/db.json', 'w') as f:
+        json.dump(add_to_json, f, indent=2, ensure_ascii=False)
+    await message.answer('Выберите куда сохранить.', reply_markup=folders_menu())
