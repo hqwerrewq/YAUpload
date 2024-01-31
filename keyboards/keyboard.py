@@ -18,7 +18,7 @@ def folders_menu(page: int = 0):
     )
     for folder in load_json():
         builder.row(
-            InlineKeyboardButton(text=folder, callback_data='folders'),
+            InlineKeyboardButton(text=folder, callback_data=f'{folder}'),
             width=1
         )
     return builder.as_markup()
