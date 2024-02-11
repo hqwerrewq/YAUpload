@@ -3,11 +3,11 @@ import os
 
 from aiogram import Bot, Dispatcher
 from aiogram.fsm.storage.memory import MemoryStorage
-from utils.commands import set_commands
 from dotenv import find_dotenv, load_dotenv
-from handlers.folders_handler import folder_router
-from handlers.photo_handlers import photo_router
+
 from handlers.main_handlers import main_handler
+from handlers.photo_handlers import photo_router
+from utils.commands import set_commands
 
 load_dotenv(find_dotenv())
 
@@ -18,7 +18,6 @@ async def main():
     bot = Bot(token=os.getenv('BOT_TOKEN'))
     dp = Dispatcher(storage=MemoryStorage())
     dp.include_router(router=main_handler)
-    dp.include_router(router=folder_router)
     dp.include_router(router=photo_router)
     await set_commands(bot)
     await bot.delete_webhook(drop_pending_updates=True)
