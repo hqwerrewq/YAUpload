@@ -4,7 +4,7 @@
 Telegram bot  который загружает фото в яндекс диск.
 
 
-## Получение Яндекс Диск токена.
+## Получение Яндекс Диск, Telegram bot токена.
 
  - [REST API Диска](https://yandex.ru/dev/disk/rest/)
  - [BotFather](https://t.me/botfather)
